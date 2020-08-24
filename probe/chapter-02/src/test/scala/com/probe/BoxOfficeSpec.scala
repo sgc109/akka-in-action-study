@@ -2,7 +2,7 @@ package com.probe
 
 import akka.actor.ActorSystem
 import akka.testkit.{DefaultTimeout, ImplicitSender, TestKit}
-import com.probe.BoxOffice.{CreateEvent, Event, EventCreated}
+import com.probe.BoxOffice.{CreateEvent, Event, EventCreated, Events, GetEvents}
 import org.scalatest.matchers.must.Matchers
 import org.scalatest.wordspec.AnyWordSpecLike
 
@@ -19,6 +19,9 @@ class BoxOfficeSpec extends TestKit(ActorSystem("textBoxOffice"))
 
       boxOffice ! CreateEvent(eventName, 10)
       expectMsg(EventCreated(Event(eventName, 10)))
+
+      boxOffice ! GetEvents
+      expectMsg(Events(Vector(Event(eventName, 10))))
     }
   }
 

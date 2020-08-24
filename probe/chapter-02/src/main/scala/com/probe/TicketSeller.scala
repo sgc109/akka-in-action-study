@@ -13,6 +13,8 @@ object TicketSeller {
 
   case class Tickets(event: String, entries: Vector[Ticket] = Vector.empty[Ticket])
 
+  case object GetEvent
+
 }
 
 class TicketSeller(event: String) extends Actor {
@@ -31,5 +33,6 @@ class TicketSeller(event: String) extends Actor {
       } else {
         sender() ! Tickets(event)
       }
+    case GetEvent => sender() ! Some(BoxOffice.Event(event, tickets.size))
   }
 }

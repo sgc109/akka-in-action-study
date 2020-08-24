@@ -1,6 +1,6 @@
 package com.probe
 
-import akka.actor.{Actor, Props}
+import akka.actor.{Actor, ActorRef, Props}
 import akka.util.Timeout
 
 object BoxOffice {
@@ -25,12 +25,18 @@ object BoxOffice {
 }
 
 class BoxOffice(implicit timeout: Timeout) extends Actor {
+
   import BoxOffice._
-  import context._
+
+  def createTicketSeller(name: String): ActorRef = context.actorOf(TicketSeller.props(name), name)
+
   override def receive: Receive = {
     case CreateEvent(name, tickets) =>
-      def create() = {
-
+      def create(): Unit = {
+        val ticketSeller = createTicketSeller(name)
+        val newTickets = (1 to tickets).map { ticketId => TicketSeller.Ticket(ticketId) }.toVector
+        ticketSeller ! TicketSeller.Add(newTickets)
+        sender() ! EventCreated(Event(name, tickets))
       }
 
       context.child(name).fold(create())(_ => sender() ! EventExists)

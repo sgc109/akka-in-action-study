@@ -47,16 +47,11 @@ class BoxOffice(implicit timeout: Timeout) extends Actor {
       context.child(name).fold(create())(_ => sender() ! EventExists)
 
     case GetEvent(event) =>
-      def notFound(): Unit = {
-        sender() ! None
-      }
+      def getEvent = (child: ActorRef) => child forward TicketSeller.GetEvent
 
-      // TODO extract 방법 찾아보기
-//      def getEvent(child: ActorRef): Unit = {
-//        child forward TicketSeller.GetEvent
-//      }
+      def notFound = () => sender() ! None
 
-      context.child(event).fold(notFound())(f = child => child forward TicketSeller.GetEvent)
+      context.child(event).fold(notFound())(getEvent)
 
     case GetEvents =>
       import akka.pattern.{ask, pipe}

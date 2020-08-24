@@ -10,6 +10,10 @@ object BoxOffice {
 
   def name = "boxOffice"
 
+  case class CancelEvent(name: String)
+
+  case class GetTickets(name: String, tickets: Int)
+
   case class GetEvent(name: String)
 
   case object GetEvents
@@ -64,5 +68,26 @@ class BoxOffice(implicit timeout: Timeout) extends Actor {
         future.map(_.flatten).map(events => Events(events.toVector))
 
       pipe(convertToEvents(Future.sequence(getEvents))) to sender()
+
+    case GetTickets(event, tickets) =>
+      def notFound(): Unit = {
+        sender() ! TicketSeller.Tickets(event)
+      }
+
+      def buy = {
+        (child: ActorRef) => child.forward(TicketSeller.Buy(tickets))
+      }
+
+      context.child(event).fold(notFound())(buy)
+    case CancelEvent(event) =>
+      def notFound(): Unit = {
+        sender() ! None
+      }
+
+      def cancel = {
+        (child: ActorRef) => child forward TicketSeller.Cancel
+      }
+
+      context.child(event).fold(notFound())(cancel)
   }
 }

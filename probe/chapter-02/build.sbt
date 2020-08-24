@@ -1,11 +1,8 @@
-enablePlugins(JavaServerAppPackaging)
-
 name := "chapter-02"
 
 version := "0.1"
 
 organization := "com.probe"
-
 
 libraryDependencies ++= {
   val akkaVersion = "2.6.8"

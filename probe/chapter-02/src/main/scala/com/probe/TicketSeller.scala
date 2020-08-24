@@ -1,9 +1,11 @@
 package com.probe
 
-import akka.actor.{Actor, Props}
+import akka.actor.{Actor, PoisonPill, Props}
 
 object TicketSeller {
   def props(event: String) = Props(new TicketSeller(event))
+
+  case object Cancel
 
   case class Ticket(id: Int)
 
@@ -34,5 +36,8 @@ class TicketSeller(event: String) extends Actor {
         sender() ! Tickets(event)
       }
     case GetEvent => sender() ! Some(BoxOffice.Event(event, tickets.size))
+    case Cancel =>
+      sender() ! Some(BoxOffice.Event(event, tickets.size))
+      self ! PoisonPill
   }
 }

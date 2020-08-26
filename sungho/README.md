@@ -3,8 +3,8 @@
 |    1    	| 아카 소개                       |:white_check_mark:|
 |    2    	| 일어나 달려보자                   |:white_check_mark:|
 |    3    	| 액터를 사용한 테스트 주도 개발       |:white_check_mark:|
-|    4    	| 내고장성                        |     :runner:     |
-|    5    	| 퓨쳐                           |                  |
+|    4    	| 내고장성                        |:white_check_mark:|
+|    5    	| 퓨쳐                           |     :runner:     |
 |    6    	| 첫 번째 분산 아카 애플케이션         |                  |
 |    7    	| 설정, 로깅, 배포                 |                  |
 |    8    	| 액터를 사용한 구조적 패턴           |                  |
